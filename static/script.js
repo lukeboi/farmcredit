@@ -42,7 +42,7 @@
                 .setLngLat(e.lngLat)
                 .setHTML(e.features[0].properties.name)
                 .addTo(map);
-            fetch("/api/")
+            fetch("/api/" + e.features[0].properties.name)
             .then(response=>response.text())
             .then(data=>{ 
                 console.log(data);
