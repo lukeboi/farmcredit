@@ -1,0 +1,16 @@
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; right: 0; width: calc(100% - 200px); }
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+#info {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  padding: 20px;
+  font-family: sans-serif;
+}
