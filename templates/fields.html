@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}My Fields{% endblock %}
+
+{% block content %}
+<div id="centercontent">
+    <h1>My Fields</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <li>{{ message }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    {% if current_user.is_authenticated %}
+        {% for field in fields %}
+            <h2>{{ field[1] }}</h2>
+            <p><b>Full Address:</b> <br>{{ field[2] }}</p>
+            <p><b>County:</b> <br>{{ field[6] }}</p>
+            <p><b>Zip Code:</b> <br>{{ field[5] }}</p>
+            <p><b>Industry:</b> {{ field[3] }}</p>
+            <p><b>Land Owner:</b> <br>{{ field[7] }}</p>
+        {% endfor %}
+    {% else %}
+        <p>Please log in to view your fields.</p>
+    {% endif %}
+</div>
+{% endblock %}
