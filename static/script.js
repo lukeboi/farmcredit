@@ -38,17 +38,18 @@
         // open a popup at the location of the click, with description
         // HTML from the click event's properties.
         map.on('click', 'states-layer', (e) => {
+            var apn = Math.floor(Math.random() * 10 ** 10);
             new mapboxgl.Popup()
                 .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.name)
+                .setHTML(e.features[0].properties.name + "<br> APN: " + apn)
                 .addTo(map);
             fetch("/api/" + e.features[0].properties.name)
             .then(response=>response.text())
             .then(data=>{ 
                 console.log(data);
-                document.getElementById("info-desc").innerHTML = data;
+                document.getElementById("info-desc").innerHTML = "<b>APN:</b> " + apn + "<br>" + data;
             });
-            document.getElementById("info-title").innerHTML = e.features[0].properties.name;
+            document.getElementById("info-title").innerHTML = "<b>Selected field name:</b> " + e.features[0].properties.name;
         });
 
         // Change the cursor to a pointer when

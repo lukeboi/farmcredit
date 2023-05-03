@@ -8,7 +8,7 @@ body {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: calc(100% - 300px);
+  width: calc(100% - 500px);
   height: calc(100% - 80px);
 }
 
@@ -56,6 +56,15 @@ body {
   font-size: 16px;
 }
 
+.inputbox > select {
+  width: 95%;
+  height: 25px;
+  font-size: 16px;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 4;
+}
+
 .inputbox.full {
   width: 100%;
 }
@@ -78,15 +87,20 @@ button {
 }
 
 .mapboxgl-popup {
-  max-width: 400px;
-  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  width: 300px;
+  height: 100px;
+  font: 16px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.mapboxgl-popup-close-button {
+  color: black;
 }
 
 #info {
   position: fixed;
   left: 0;
   bottom: 0;
-  width: 300px;
+  width: 480px;
   height: calc(100% - 80px);
   padding: 20px;
 }

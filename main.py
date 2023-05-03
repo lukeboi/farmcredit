@@ -1,3 +1,4 @@
+import random
 from flask import Flask, g, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
@@ -48,7 +49,7 @@ def ensure_users_table_exists():
             FOREIGN KEY (Owner) REFERENCES Users(Username)
         )
     """)
-
+    
     cur.execute("""
         CREATE TABLE IF NOT EXISTS Crops (
             ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,12 +59,24 @@ def ensure_users_table_exists():
             FOREIGN KEY (FieldID) REFERENCES Fields(ID)
         )
     """)
+    
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS Livestock (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Year TEXT NOT NULL,
+            LivestockType TEXT NOT NULL,
+            FieldID INTEGER NOT NULL,
+            FOREIGN KEY (FieldID) REFERENCES Fields(ID)
+        )
+    """)
 
     cur.execute("INSERT OR IGNORE INTO Users (Username, Password) VALUES (?, ?)", ("lukefarritor", "password"))
     
-    cur.execute("INSERT OR IGNORE INTO Fields (Name, Address, Industry, Owner, ZipCode, County, LandOwner) VALUES (?, ?, ?, ?, ?, ?, ?)", ("Example Field", "123 Main St\n Lincoln, NE 68236", "Agriculture", "lukefarritor", "68526", "Lancaster", "Luke Farritor"))
+    cur.execute("INSERT OR IGNORE INTO Fields (Name, Address, Industry, Owner, ZipCode, County, LandOwner) VALUES (?, ?, ?, ?, ?, ?, ?)", ("Example Field", "123 Main St", "Technology", "lukefarritor", "68526", "Lancaster", "Luke Farritor"))
     
     cur.execute("INSERT OR IGNORE INTO Crops (CropType, Industry, FieldID) VALUES (?, ?, ?)", ("Corn", "Agriculture", 1))
+    
+    cur.execute("INSERT OR IGNORE INTO Livestock (Year, LivestockType, FieldID) VALUES (?, ?, ?)", (str(random.randint(1990, 2020)), "Cattle", 1))
 
     db.commit()
 
@@ -131,13 +144,16 @@ def close_connection(exception):
 # api endpoint for sustainability data
 @app.route('/api/<city>')
 def api(city):
-    cur = get_db().cursor()
-    command = "SELECT Data FROM Data WHERE Name='" + city + "'"
-    print(command)
-    res = cur.execute(command)
-    data = str(res.fetchone()[0])
-    print(data)
-    return data.replace("\n", "<br>")
+    print("API CALL", city)
+    return f"<b>Property Purchased:</b> {random.randint(1990, 2020)}" +\
+        f"<br><b>Previous Owner:</b> John Doe"
+    # cur = get_db().cursor()
+    # command = "SELECT Data FROM Data WHERE Name='" + city + "'"
+    # print(command)
+    # res = cur.execute(command)
+    # data = str(res.fetchone()[0])
+    # print(data)
+    # return data.replace("\n", "<br>")
     # return "am ogjfiew ojfieo wjfiowe  us" + str(time.time()) + " " + city
 
 # return static html at index route
@@ -153,6 +169,7 @@ def fields():
     cur = get_db().cursor()
     command = "SELECT * FROM Fields WHERE Owner=?"
     res = cur.execute(command, (current_user.id,))
+    print(current_user.id)
 
     fields = []
     for field in res.fetchall():
@@ -160,12 +177,17 @@ def fields():
         command = "SELECT * FROM Crops WHERE FieldID=?"
         res = cur.execute(command, (field[0],))
         crops = res.fetchall()
+        command = "SELECT * FROM Livestock WHERE FieldID=?"
+        res = cur.execute(command, (field[0],))
+        livestock = res.fetchall()
         field = list(field)
         field.append(crops)
-        print(crops)
+        field.append(livestock)
+        print(crops, livestock)
         fields.append(tuple(field))
 
     return render_template('fields.html', fields=fields)
+
 
 
 if __name__ == "__main__":

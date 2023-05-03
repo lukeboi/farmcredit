@@ -35,6 +35,17 @@
             {% else %}
                 <p>No crops found for this field.</p>
             {% endif %}
+            <p><b>Livestock:</b></p>
+            {% if field[9] %}
+            <ul>
+            {% for livestock in field[9] %}
+                <b>Year:</b>&nbsp;{{ livestock[1] }}<b>&nbsp;&nbsp;&nbsp;&nbsp;Livestock Type:</b>&nbsp;{{ livestock[2] }}
+                <br>
+            {% endfor %}
+            </ul>
+            {% else %}
+                <p>No livestock found for this field.</p>
+            {% endif %}
         {% endfor %}
     {% else %}
         <p>Please log in to view your fields.</p>
