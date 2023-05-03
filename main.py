@@ -49,21 +49,21 @@ def ensure_users_table_exists():
         )
     """)
 
-    # cur.execute("""
-    #     CREATE TABLE IF NOT EXISTS Crops (
-    #         ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    #         CropType TEXT NOT NULL,
-    #         Industry TEXT NOT NULL,
-    #         FieldID INTEGER NOT NULL,
-    #         FOREIGN KEY (FieldID) REFERENCES Fields(ID)
-    #     )
-    # """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS Crops (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            CropType TEXT NOT NULL,
+            Industry TEXT NOT NULL,
+            FieldID INTEGER NOT NULL,
+            FOREIGN KEY (FieldID) REFERENCES Fields(ID)
+        )
+    """)
 
     cur.execute("INSERT OR IGNORE INTO Users (Username, Password) VALUES (?, ?)", ("lukefarritor", "password"))
     
     cur.execute("INSERT OR IGNORE INTO Fields (Name, Address, Industry, Owner, ZipCode, County, LandOwner) VALUES (?, ?, ?, ?, ?, ?, ?)", ("Example Field", "123 Main St\n Lincoln, NE 68236", "Agriculture", "lukefarritor", "68526", "Lancaster", "Luke Farritor"))
     
-    # cur.execute("INSERT INTO Crops (CropType, Industry, FieldID) VALUES (?, ?, ?)", ("Corn", "Agriculture", 1))
+    cur.execute("INSERT OR IGNORE INTO Crops (CropType, Industry, FieldID) VALUES (?, ?, ?)", ("Corn", "Agriculture", 1))
 
     db.commit()
 
@@ -153,11 +153,20 @@ def fields():
     cur = get_db().cursor()
     command = "SELECT * FROM Fields WHERE Owner=?"
     res = cur.execute(command, (current_user.id,))
-    print(current_user.id)
 
-    fields = res.fetchall()
-    print(fields)
+    fields = []
+    for field in res.fetchall():
+        print(field, field[0])
+        command = "SELECT * FROM Crops WHERE FieldID=?"
+        res = cur.execute(command, (field[0],))
+        crops = res.fetchall()
+        field = list(field)
+        field.append(crops)
+        print(crops)
+        fields.append(tuple(field))
+
     return render_template('fields.html', fields=fields)
+
 
 if __name__ == "__main__":
     # with app.app_context():

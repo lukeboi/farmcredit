@@ -24,6 +24,17 @@
             <p><b>Zip Code:</b> <br>{{ field[5] }}</p>
             <p><b>Industry:</b> {{ field[3] }}</p>
             <p><b>Land Owner:</b> <br>{{ field[7] }}</p>
+            <p><b>Crops:</b></p>
+            {% if field[8] %}
+            <ul>
+            {% for crop in field[8] %}
+                <b>Crop Type:</b>&nbsp;{{ crop[1] }}<b>&nbsp;&nbsp;&nbsp;&nbsp;Crop Industry:</b>&nbsp;{{ crop[2] }}
+                <br>
+            {% endfor %}
+            </ul>
+            {% else %}
+                <p>No crops found for this field.</p>
+            {% endif %}
         {% endfor %}
     {% else %}
         <p>Please log in to view your fields.</p>
