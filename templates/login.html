@@ -1,28 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div id="centercontent">
     <h1>Login</h1>
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
             <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <li>{{ message }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         {% endif %}
     {% endwith %}
     <form method="post" action="{{ url_for('login') }}">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-        <br>
+        <div class="inputbox full">
+            <label for="username">Username:</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="inputbox full">
+            <label for="password">Password:</label>
+            <input type="password" name="password" required>
+        </div>
         <button type="submit">Login</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

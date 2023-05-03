@@ -1,4 +1,8 @@
-body { margin: 0; padding: 0; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
 
 #map {
   position: absolute;
@@ -24,6 +28,55 @@ body { margin: 0; padding: 0; }
   margin-top: 10px;
 }
 
+#centercontent {
+  width: 600px;
+  margin-left: calc(50% - 320px);
+  margin-top: 150px;
+  padding: 20px;
+  background-color: #f4f7f8;
+}
+
+#centercontent > h1 {
+  text-align: center;
+}
+
+.inputbox {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.inputbox > label {
+  font-size: 16px;
+  display: block;
+}
+
+.inputbox > input {
+  width: 95%;
+  height: 25px;
+  font-size: 16px;
+}
+
+.inputbox.full {
+  width: 100%;
+}
+
+.inputbox.half {
+  width: 42.5%;
+}
+
+.inputbox.third {
+  width: 31.67%;
+}
+
+button {
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  background-color: #006B00;
+  color: white;
+  border-radius: 3px;
+}
+
 .mapboxgl-popup {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -36,5 +89,4 @@ body { margin: 0; padding: 0; }
   width: 300px;
   height: calc(100% - 80px);
   padding: 20px;
-  font-family: sans-serif;
 }

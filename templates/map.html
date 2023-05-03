@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}DS Demo{% endblock %}
+
+{% block content %}
+  <div id="map"></div>
+  <div id="info">
+    <h2><p id="info-title"></p></h2>
+    <p id="info-desc">Click a polygon to view more info</p>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
+  <script src="/static/script.js"></script>
+{% endblock %}

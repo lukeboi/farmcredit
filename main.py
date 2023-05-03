@@ -38,7 +38,7 @@ def ensure_users_table_exists():
     cur.execute("INSERT OR IGNORE INTO Users (Username, Password) VALUES (?, ?)", ("lukefarritor", "password"))
 
     db.commit()
-
+    
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -58,9 +58,10 @@ def login():
             flash('Logged in successfully.')
             return redirect(url_for('index'))
         else:
-            flash('Invalid username or password.')
+            flash('Invalid username or password.', 'error')
 
     return render_template('login.html')
+
 
 # db helper functions
 def get_db():
@@ -114,7 +115,8 @@ def api(city):
 @app.route('/')
 @login_required
 def index():
-    return app.send_static_file("index.html")
+    # return app.send_static_file("index.html")
+    return render_template("index.html")
 
 if __name__ == "__main__":
     # with app.app_context():
