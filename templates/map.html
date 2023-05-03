@@ -5,6 +5,7 @@
 {% block content %}
   <div id="map"></div>
   <div id="info">
+    <form id="dataForm" onsubmit="handleSubmit(event)">
     <h1>Add a field</h1>
     <h2>Personal Information</h2>
     <div class="inputbox full">
@@ -38,7 +39,6 @@
     <div class="inputbox half">
       <label for="state">State:</label>
       <select id="state" name="state">
-        <option value="">-- Select a state --</option>
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
         <option value="AZ">Arizona</option>
@@ -129,10 +129,100 @@
       <label for="owner">Land Owner:</label>
       <input type="text" name="owner" required>
     </div>
+    
+  <h2>Crops</h2>
+  <div id="crops"></div>
+  <button type="button" onclick="addCrop()">Add Crop</button>
+
+  <h2>Livestock</h2>
+  <div id="livestock"></div>
+  <button type="button" onclick="addLivestock()">Add Livestock</button>
+
+  <br>
+  <br>
+  <br>
+  <button type="submit">Submit</button>
+
+</form>
+  <template id="cropTemplate">
+    <div>
+      <div class="inputbox half">
+        <label>Crop Type:</label><input type="text" name="cropType[]" required>
+      </div>
+      <div class="inputbox half">
+        <label>Industry:</label><input type="text" name="cropIndustry[]" required>
+      </div>
+      <button type="button" id="remove" onclick="removeElement(event)">Remove</button>
+    </div>
+</template>
+
+<template id="livestockTemplate">
+    <div>
+      <div class="inputbox half">
+        <label>Year: </label>
+        <input type="number" name="livestockYear[]" min="1990" max="2020" required>
+      </div>
+      <div class="inputbox half">
+        <label>Livestock Type: </label>
+        <input type="text" name="livestockType[]" required>
+      </div>
+        <button type="button" id="remove" onclick="removeElement(event)">Remove</button>
+    </div>
+</template>
   </div>
 {% endblock %}
 
 {% block scripts %}
   <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
   <script src="/static/script.js"></script>
+  <script>
+function addCrop() {
+  let crops = document.getElementById('crops');
+  let cropCount = crops.children.length;
+  let cropTemplate = document.getElementById('cropTemplate').content.cloneNode(true);
+  let cropTypeInput = cropTemplate.querySelector('input[name="cropType[]"]');
+  let cropIndustryInput = cropTemplate.querySelector('input[name="cropIndustry[]"]');
+  cropTypeInput.name = `cropType[${cropCount}]`;
+  cropIndustryInput.name = `cropIndustry[${cropCount}]`;
+  crops.appendChild(cropTemplate);
+}
+
+function addLivestock() {
+  let livestock = document.getElementById('livestock');
+  let livestockCount = livestock.children.length;
+  let livestockTemplate = document.getElementById('livestockTemplate').content.cloneNode(true);
+  let livestockYearInput = livestockTemplate.querySelector('input[name="livestockYear[]"]');
+  let livestockTypeInput = livestockTemplate.querySelector('input[name="livestockType[]"]');
+  livestockYearInput.name = `livestockYear[${livestockCount}]`;
+  livestockTypeInput.name = `livestockType[${livestockCount}]`;
+  livestock.appendChild(livestockTemplate);
+}
+
+    function removeElement(e) {
+      e.target.parentElement.remove();
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('dataForm');
+      const formData = new FormData(form);
+      
+      // Send the form data to the Flask backend
+      const response = await fetch('/submit-data', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert(result.message);
+
+    // Redirect to a success page or any other page you'd like
+    window.location.href = '/fields';
+      } else {
+        alert('Error submitting data');
+      }
+    }
+
+  </script>
 {% endblock %}

@@ -1,7 +1,8 @@
 import random
-from flask import Flask, g, render_template, request, redirect, url_for, flash
+from flask import Flask, g, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
+import re
 
 # create flask app
 app = Flask(__name__)
@@ -80,6 +81,72 @@ def ensure_users_table_exists():
 
     db.commit()
 
+
+@app.route('/submit-data', methods=['POST'])
+def submit_data():
+    data = request.form.to_dict()
+
+    print("DATA", data)
+    print()
+    print()
+
+    # Retrieve form data from the request object
+    db = get_db()
+    cur = db.cursor()
+
+    # Insert field data
+    cur.execute("INSERT OR IGNORE INTO Fields (Name, Address, Industry, Owner, ZipCode, County, LandOwner) VALUES (?, ?, ?, ?, ?, ?, ?)", (data['firstname'] + " " + data['lastname'], data['address'], data['industry'], current_user.id, data['zipcode'], data['county'], data['owner']))
+
+    # Get the inserted field's ID
+    field_id = cur.lastrowid
+
+    # Insert crop data
+    crop_type_pattern = re.compile(r'cropType\[\d+\]')
+    crop_industry_pattern = re.compile(r'cropIndustry\[\d+\]')
+    crops = {}
+
+    for key, value in data.items():
+        if crop_type_pattern.match(key):
+            index = re.findall(r'\d+', key)[0]
+            if index not in crops:
+                crops[index] = {}
+            crops[index]['type'] = value
+        elif crop_industry_pattern.match(key):
+            index = re.findall(r'\d+', key)[0]
+            if index not in crops:
+                crops[index] = {}
+            crops[index]['industry'] = value
+        
+        print("COPS CROPS CROPS", crops)
+
+    for crop in crops.values():
+        cur.execute("INSERT OR IGNORE INTO Crops (CropType, Industry, FieldID) VALUES (?, ?, ?)", (crop['type'], crop['industry'], field_id))
+
+    # Insert livestock data
+    livestock_year_pattern = re.compile(r'livestockYear\[\d+\]')
+    livestock_type_pattern = re.compile(r'livestockType\[\d+\]')
+    livestock = {}
+
+    for key, value in data.items():
+        if livestock_year_pattern.match(key):
+            index = re.findall(r'\d+', key)[0]
+            if index not in livestock:
+                livestock[index] = {}
+            livestock[index]['year'] = value
+        elif livestock_type_pattern.match(key):
+            index = re.findall(r'\d+', key)[0]
+            if index not in livestock:
+                livestock[index] = {}
+            livestock[index]['type'] = value
+            
+        print("LIVE LIVE LIVE", crops)
+
+    for live in livestock.values():
+        cur.execute("INSERT OR IGNORE INTO Livestock (Year, LivestockType, FieldID) VALUES (?, ?, ?)", (live['year'], live['type'], field_id))
+
+    db.commit()
+    # Return a JSON response
+    return jsonify(message='Data submitted successfully'), 200
     
 # Login route
 @app.route('/login', methods=['GET', 'POST'])

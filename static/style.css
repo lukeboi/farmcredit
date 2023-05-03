@@ -70,7 +70,7 @@ body {
 }
 
 .inputbox.half {
-  width: 42.5%;
+  width: 44.5%;
 }
 
 .inputbox.third {
@@ -101,6 +101,14 @@ button {
   left: 0;
   bottom: 0;
   width: 480px;
-  height: calc(100% - 80px);
+  height: calc(100% - 120px);
   padding: 20px;
+  overflow-y: scroll;
+}
+
+#remove {
+  background-color: grey;
+  padding: 2px;
+  height: 30px;
+  margin: 4px;
 }
