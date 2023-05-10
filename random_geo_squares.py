@@ -4,7 +4,7 @@ from nltk.corpus import wordnet
 import math
 
 # Define the number of shapes to generate
-num_shapes = 55000
+num_shapes = 80000
 
 # Define the range of coordinates for the center of each shape
 lat_range = (37.0, 45.5)

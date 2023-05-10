@@ -22,6 +22,14 @@ body {
   top: 0;
 }
 
+#header > a {
+  color: white;
+  position: fixed;
+  right: 17%;
+  top: 0;
+  line-height: 80px;
+}
+
 #fcsa-logo {
   width: 300px;
   position: absolute;
@@ -84,6 +92,13 @@ button {
   background-color: #006B00;
   color: white;
   border-radius: 3px;
+}
+
+#addbutton {
+  text-align: center;
+  display: inline;
+  width: 100%;
+  display: block;
 }
 
 .mapboxgl-popup {

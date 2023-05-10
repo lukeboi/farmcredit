@@ -165,7 +165,7 @@ def login():
             user = User(username)
             login_user(user)
             flash('Logged in successfully.')
-            return redirect(url_for('index'))
+            return redirect(url_for('fields'))
         else:
             flash('Invalid username or password.', 'error')
 

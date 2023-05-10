@@ -5,6 +5,7 @@
 {% block content %}
 <div id="centercontent">
     <h1>My Fields</h1>
+    <a href="/" id="addbutton"><button>Add a field</button></a>
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
             <ul>
